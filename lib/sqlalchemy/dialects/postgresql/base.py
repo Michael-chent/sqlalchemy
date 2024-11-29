@@ -3381,8 +3381,9 @@ class PGDialect(default.DefaultDialect):
     def _get_server_version_info(self, connection):
         v = connection.exec_driver_sql("select pg_catalog.version()").scalar()
         m = re.match(
-            r".*(?:PostgreSQL|EnterpriseDB) "
-            r"(\d+)\.?(\d+)?(?:\.(\d+))?(?:\.\d+)?(?:devel|beta)?",
+            r"(?:(?:PostgreSQL|EnterpriseDB)\s+(\d+)\.?(\d+)?(?:\.(\d+))?(?:\.\d+)?(?:devel|beta)?)"  # 匹配 PostgreSQL 或 EnterpriseDB
+            r"|"
+            r"(?:gaussdb\s+\(GaussDB Kernel\s+(\d+)\.(\d+)\.(\d+))",  # 匹配 GaussDB 格式
             v,
         )
         if not m:
